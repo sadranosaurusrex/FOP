@@ -54,7 +54,7 @@ void menu() {
             case KEY_DOWN:
                 highlight = (highlight + 1) % n_options; // Move down
                 break;
-            case 10: // Enter key
+            case 10: // Enter
                 choice = highlight;
                 break;
         }
@@ -103,9 +103,10 @@ void create_account() {
     
     echo();
     mvprintw(0, 0, "Please enter a username: ");
-    scanw("%s", username);
-    if (taken_username(username)) {
-
+    scanw(" %s", username);
+    while (taken_username(username)) {
+        mvprintw(0, 0, "We can't let you have that username. Please enter a new one: ");
+        scanw("%s", username);
     }
 
     mvprintw(1, 0, "Please enter your email address: ");
@@ -181,6 +182,8 @@ int valid_email(const char *str) {
 }
 
 int taken_username(char* username) {
+    if (strlen(username) < 2) return 1;
+
     FILE *file = fopen("user_data.txt", "r");
     if (file == NULL) {
         return 0; // File not found
@@ -196,6 +199,8 @@ int taken_username(char* username) {
             return 1;
         }
     }
+    
+    return 0;
 }
 
 int authenticate_user(const char *username, const char *password) {
