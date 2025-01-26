@@ -11,7 +11,7 @@ int authenticate_user(const char *username, const char *password);
 void create_account();
 void guest_mode();
 void login();
-void menu();
+int menu();
 
 // Screen setup
 void screen_setup() {
@@ -28,7 +28,9 @@ int main() {
     return 0;
 }
 
-void menu() {
+int menu() {
+    screen_setup();
+    
     const char *options[] = {"Log in", "Create account", "Guest mode", "Exit"};
     int n_options = sizeof(options) / sizeof(options[0]);
     int choice;
@@ -61,12 +63,15 @@ void menu() {
 
         if (choice == 0) {
             login();
+            return 0;
         } else if (choice == 1) {
             create_account();
+            return 1;
         } else if (choice == 2) {
             guest_mode();
+            return 2;
         } else if (choice == 3) {
-            break; // Exit
+            return 3; // Exit
         }
 
         choice = -1;
