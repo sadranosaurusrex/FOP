@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "menu.h"
 
 // Function declarations
 int valid_password(const char *password);
@@ -13,6 +14,10 @@ void guest_mode();
 void login();
 int menu();
 
+char usernameext[100] = "";
+char passwordext[100] = "";
+char emailext[100] = "";
+
 // Screen setup
 void screen_setup() {
     initscr();
@@ -21,19 +26,19 @@ void screen_setup() {
     keypad(stdscr, TRUE);
 }
 
-int main() {
-    screen_setup();
-    menu();
-    endwin(); // Exit ncurses mode
-    return 0;
-}
+// int main() {
+//     screen_setup();
+//     menu();
+//     endwin(); // Exit ncurses mode
+//     return 0;
+// }
 
 int menu() {
     screen_setup();
     
     const char *options[] = {"Log in", "Create account", "Guest mode", "Exit"};
     int n_options = sizeof(options) / sizeof(options[0]);
-    int choice;
+    int choice = -1;
     int highlight = 0;
 
     while (1) {
@@ -68,7 +73,6 @@ int menu() {
             create_account();
             return 1;
         } else if (choice == 2) {
-            guest_mode();
             return 2;
         } else if (choice == 3) {
             return 3; // Exit
@@ -96,7 +100,10 @@ void login() {
         mvprintw(3, 0, "Invalid username or password.");
     }
 
-    mvprintw(5, 0, "Press any key to return to the menu.");
+    strcpy(usernameext, username);
+    strcpy(passwordext, password);
+
+    mvprintw(5, 0, "Press any key to continue. ");
     getch();
 }
 
@@ -110,7 +117,7 @@ void create_account() {
     mvprintw(0, 0, "Please enter a username: ");
     scanw(" %s", username);
     while (taken_username(username)) {
-        mvprintw(0, 0, "We can't let you have that username. Please enter a new one: ");
+        mvprintw(0, 0, "We can't let you have this username. Please enter a new one: ");
         scanw("%s", username);
     }
 
@@ -139,7 +146,10 @@ void create_account() {
         mvprintw(6, 0, "Error: Could not save account.");
     }
 
-    mvprintw(8, 0, "Press any key to return to the menu.");
+    strcpy(usernameext, username);
+    strcpy(passwordext, password);
+
+    mvprintw(8, 0, "Press any key continue.");
     getch();
 }
 
